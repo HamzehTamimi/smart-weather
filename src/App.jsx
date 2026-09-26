@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { getWeather } from "./services/weatherApi";
 import WeatherCard from "./components/WeatherCard";
+import ForecastList from "./components/ForecastList";
 import "./App.css";
 
 function App() {
@@ -57,7 +58,10 @@ function App() {
       {error && <p className="error-message">{error}</p>}
 
       {weather ? (
-        <WeatherCard weather={weather} />
+        <>
+          <WeatherCard weather={weather} />
+          <ForecastList forecast={weather.forecast} />
+        </>
       ) : (
         !error && (
           <section className="weather-container">

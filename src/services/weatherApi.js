@@ -56,6 +56,9 @@ export async function getWeather(city) {
     longitude: location.longitude,
     current:
       "temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m",
+    daily:
+      "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max",
+    forecast_days: "6",
     timezone: "auto",
   });
 
@@ -68,6 +71,23 @@ export async function getWeather(city) {
   const data = await response.json();
   const condition = getWeatherCondition(data.current.weather_code);
 
+  // Index 0 is today, so the next five entries are the upcoming forecast.
+  const forecast = data.daily.time.slice(1, 6).map((date, index) => {
+    const dailyIndex = index + 1;
+    const dailyCondition = getWeatherCondition(
+      data.daily.weather_code[dailyIndex]
+    );
+
+    return {
+      date,
+      maxTemp: data.daily.temperature_2m_max[dailyIndex],
+      minTemp: data.daily.temperature_2m_min[dailyIndex],
+      rainChance: data.daily.precipitation_probability_max[dailyIndex],
+      condition: dailyCondition.label,
+      icon: dailyCondition.icon,
+    };
+  });
+
   return {
     city: location.name,
     country: location.country,
@@ -78,5 +98,6 @@ export async function getWeather(city) {
     windSpeed: data.current.wind_speed_10m,
     condition: condition.label,
     icon: condition.icon,
+    forecast,
   };
 }
