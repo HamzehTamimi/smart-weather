@@ -23,3 +23,34 @@
   border: 1px solid #e2e8f0;
   border-radius: 12px;
 }
+
+.search-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.search-form input {
+  flex: 1;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  outline: none;
+}
+
+.search-form input:focus {
+  border-color: #64748b;
+}
+
+.search-form button {
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 8px;
+  background: #0f172a;
+  color: white;
+  cursor: pointer;
+}
+
+.search-form button:hover {
+  background: #1e293b;
+}
