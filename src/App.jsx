@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getWeather } from "./services/weatherApi";
+import WeatherCard from "./components/WeatherCard";
 import "./App.css";
 
 function App() {
@@ -55,24 +56,15 @@ function App() {
 
       {error && <p className="error-message">{error}</p>}
 
-      <section className="weather-container">
-        {weather ? (
-          <>
-            <h2>
-              {weather.city}, {weather.country}
-            </h2>
-
-            <p className="temperature">{weather.temperature}°C</p>
-
-            <div className="weather-details">
-              <p>Feels like: {weather.feelsLike}°C</p>
-              <p>Wind: {weather.windSpeed} km/h</p>
-            </div>
-          </>
-        ) : (
-          !error && <p>Search for a city to get started.</p>
-        )}
-      </section>
+      {weather ? (
+        <WeatherCard weather={weather} />
+      ) : (
+        !error && (
+          <section className="weather-container">
+            <p>Search for a city to get started.</p>
+          </section>
+        )
+      )}
     </main>
   );
 }
