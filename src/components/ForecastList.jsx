@@ -3,7 +3,14 @@ import ForecastCard from "./ForecastCard";
 function ForecastList({ forecast }) {
   return (
     <section className="forecast-section">
-      <h2>5-Day Forecast</h2>
+      <div className="section-heading">
+        <div>
+          <p className="label-large">FORECAST</p>
+          <h2>Next 5 days</h2>
+        </div>
+
+        <mdui-chip variant="assist">5 days</mdui-chip>
+      </div>
 
       <div className="forecast-list">
         {forecast.map((day) => (
