@@ -1,19 +1,36 @@
 import { useState } from "react";
+import { getWeather } from "./services/weatherApi";
 import "./App.css";
 
 function App() {
   const [city, setCity] = useState("");
-  const [searchedCity, setSearchedCity] = useState("");
+  const [weather, setWeather] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!city.trim()) {
+    const searchCity = city.trim();
+
+    if (!searchCity) {
       return;
     }
 
-    setSearchedCity(city.trim());
-    setCity("");
+    setLoading(true);
+    setError("");
+
+    try {
+      const weatherData = await getWeather(searchCity);
+      setWeather(weatherData);
+      setCity("");
+    } catch (err) {
+      // Keep API errors user-friendly instead of exposing request details.
+      setError(err.message);
+      setWeather(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -31,16 +48,29 @@ function App() {
           onChange={(event) => setCity(event.target.value)}
         />
 
-        <button type="submit">Search</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Searching..." : "Search"}
+        </button>
       </form>
 
+      {error && <p className="error-message">{error}</p>}
+
       <section className="weather-container">
-        {searchedCity ? (
-          <p>
-            Showing weather for <strong>{searchedCity}</strong>
-          </p>
+        {weather ? (
+          <>
+            <h2>
+              {weather.city}, {weather.country}
+            </h2>
+
+            <p className="temperature">{weather.temperature}°C</p>
+
+            <div className="weather-details">
+              <p>Feels like: {weather.feelsLike}°C</p>
+              <p>Wind: {weather.windSpeed} km/h</p>
+            </div>
+          </>
         ) : (
-          <p>Search for a city to get started.</p>
+          !error && <p>Search for a city to get started.</p>
         )}
       </section>
     </main>
